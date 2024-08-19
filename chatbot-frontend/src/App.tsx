@@ -1,13 +1,14 @@
 import React from 'react';
-import ChatWidget from './components/ChatWidget';
+import ChatContainer from './components/ChatContainer';
+import GlobalStyle from './styles/globalStyles';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <h1>Chat Widget</h1>
-      <ChatWidget />
-    </div>
+    <>
+      <GlobalStyle />
+      <ChatContainer />
+    </>
   );
-}
+};
 
 export default App;

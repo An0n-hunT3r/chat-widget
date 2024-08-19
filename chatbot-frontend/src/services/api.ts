@@ -1,17 +1,18 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:8000',
-});
+const API_URL = 'http://localhost:8000'; // Adjust to your FastAPI backend URL
 
-// Fetch messages
-export const fetchMessages = () => api.get('/messages/');
+export const fetchMessages = async () => {
+  const response = await axios.get(`${API_URL}/messages`);
+  return response.data.messages;
+};
 
-// Send message
-export const sendMessage = (content: string) => api.post('/messages/', { content });
+export const sendMessage = async (content: string) => {
+  const response = await axios.post(`${API_URL}/messages`, { content });
+  return response.data;
+};
 
-// Update message
-export const updateMessage = (id: number, content: string) => api.put(`/messages/${id}`, { content });
-
-// Delete message
-export const deleteMessage = (id: number) => api.delete(`/messages/${id}`);
+export const resetMessages = async () => {
+  const response = await axios.post(`${API_URL}/messages/reset`);
+  return response.data;
+};
