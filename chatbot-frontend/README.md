@@ -8,6 +8,8 @@ This project is a chat widget frontend built with React and TypeScript. It provi
 - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [API Integration](#api-integration)
+    - [Chat Widget in Action](#chat-widget-in-action)
+    - [No Chat History](#no-chat-history)
 
 ## Installation
 
@@ -38,3 +40,14 @@ This frontend interacts with a backend API for sending and receiving messages. T
 - **POST /reset**: Clears the chat history.
 
 Ensure the backend API is running and accessible for the frontend to function correctly.
+
+
+### Chat Widget in Action
+
+![Chat Widget](public/with-messages.png)
+*Chat widget displaying active chat*
+
+### No Chat History
+
+![No Chat History](public/empty-chat.png)
+*Chat widget displaying no chat history message*
