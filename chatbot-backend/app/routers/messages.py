@@ -23,7 +23,7 @@ def create_message(message: MessageCreate):
     
     # Generate and save the chatbot's response
     chatbot_response = get_chatbot_response(message.content)
-    message_id += 1  # Increment message ID for the chatbot's response
+    message_id += 1
     bot_message = Message(id=message_id, content=chatbot_response, sender='bot')
     messages.append(bot_message)
     
@@ -36,6 +36,7 @@ def create_message(message: MessageCreate):
 def get_messages():
     return {"messages": messages}
 
+# Not used on UI
 @router.put("/messages/{message_id}")
 def update_message(message_id: int, message: MessageCreate):
     logger.info(f"Updating message with id {message_id} to new content: {message.content}")
@@ -47,6 +48,7 @@ def update_message(message_id: int, message: MessageCreate):
             return msg
     raise HTTPException(status_code=404, detail="No message found")
 
+# Not used on UI
 @router.delete("/messages/{message_id}")
 def delete_message(message_id: int):
     logger.info(f"Deleting message with id {message_id}")

@@ -1,6 +1,6 @@
 # Chatbot Widget Backend
 
-This project is a backend implementation for a chatbot widget using FastAPI. The API supports creating, updating, retrieving, and deleting messages, and includes CORS handling to allow communication with a frontend client.
+This project provides the backend implementation for a chatbot widget using FastAPI. The backend offers API endpoints for creating, retrieving, updating, and deleting messages. Additionally, it integrates with an AI model to generate chatbot responses based on user input. The backend also manages CORS to facilitate smooth interaction with the frontend client.
 
 ## Table of Contents
 
@@ -22,6 +22,9 @@ This project is a backend implementation for a chatbot widget using FastAPI. The
       - [4. Delete Message](#4-delete-message)
         - [Request Body:](#request-body-3)
         - [Response Body:](#response-body-2)
+      - [5. Reset Chat History](#5-reset-chat-history)
+        - [Request Body:](#request-body-4)
+        - [Response:](#response-1)
 
 
 ## Getting Started
@@ -54,13 +57,11 @@ Make sure you have Python 3.8+ installed on your machine.
     uvicorn app.main:app --reload
     ```
 
-Access the API documentation at http://127.0.0.1:8000/docs.
-
 ### API Endpoints
 
 #### 1. Create Message
 
-- **URL:** `/messages/`
+- **URL:** `/messages`
 - **Method:** `POST`
 
 ##### Request Body:
@@ -74,32 +75,31 @@ Access the API documentation at http://127.0.0.1:8000/docs.
 ##### Response:
 ```json
 {
-  "message": {
-    "id": 1,
-    "content": "Your message here",
-    "edited": false
-  },
   "response": "This is a chatbot response."
 }
 ```
 
 #### 2. Get Messages
 
-- **URL:** `/messages/`
+- **URL:** `/messages`
 - **Method:** `GET`
 
 ##### Request Body:
 
+No request body is required for this endpoint.
+
 ##### Response Body:
 
 ```json
-[
-  {
-    "id": 1,
-    "content": "Your message here",
-    "edited": false
-  }
-]
+{ 
+  "messages":   [
+    {
+      "id": 1,
+      "content": "Your message here",
+      "edited": false
+    }
+  ]
+}
 ```
 
 #### 3. Update Message
@@ -131,10 +131,30 @@ Access the API documentation at http://127.0.0.1:8000/docs.
 
 ##### Request Body:
 
+No request body is required for this endpoint.
+
 ##### Response Body:
 
 ```json
 {
-  "detail": "Message deleted"
+  "detail": "Message deleted successfully"
 }
 ```
+
+#### 5. Reset Chat History
+
+- **URL:** `/messages/reset`
+- **Method:** `POST`
+
+This endpoint allows you to clear the entire chat history, reset the chatbot, and remove all persisted messages. It is useful for starting a new conversation or resetting the state of the chatbot.
+
+##### Request Body:
+
+No request body is required for this endpoint.
+
+##### Response:
+
+```json
+{
+  "response": "Message history cleared successfully"
+}

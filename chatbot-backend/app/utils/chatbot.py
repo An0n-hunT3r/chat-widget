@@ -1,43 +1,32 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
 
-# Initialize model and tokenizer
-model_name = "microsoft/DialoGPT-medium"
+model_name = "microsoft/DialoGPT-large"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Track conversation history
-conversation_history = []
-
 def get_chatbot_response(user_message: str) -> str:
-    global conversation_history
+    inputs = tokenizer.encode(user_message + tokenizer.eos_token, return_tensors="pt")
     
-    # Add the user's message to the history
-    conversation_history.append(f"User: {user_message}")
-    
-    # Prepare the input with conversation history
-    inputs = tokenizer.encode(' '.join(conversation_history), return_tensors="pt")
-    
-    # Generate response
     outputs = model.generate(
         inputs, 
-        max_length=150, 
-        num_return_sequences=1,
-        temperature=0.7,
-        top_k=50,
-        pad_token_id=tokenizer.eos_token_id
+        max_length=1000, 
+        pad_token_id=tokenizer.eos_token_id,
+        temperature=0.1,  # Controls randomness: lower values are less random
+        top_k=50,  # Limits to the top-k tokens with the highest probabilities
+        top_p=0.9,  # Top-p (nucleus sampling) chooses from the top 90% probability mass
     )
     
     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
     
-    # Add the model's response to the history
-    conversation_history.append(f"Bot: {response}")
-    
-    # Limit conversation history to avoid excessive length
-    if len(conversation_history) > 10:
-        conversation_history = conversation_history[-10:]
+    # Removes user_message from generated response
+    if response.startswith(user_message):
+        response = response[len(user_message):].strip()
     
     return response
 
+# Function can be used to reset chatbot history
+# Currently message history is not send as model starts hallucinating
 def reset_chatbot():
-    global conversation_history
-    conversation_history = []
+    """No conversation history to reset in this version."""
+    pass
