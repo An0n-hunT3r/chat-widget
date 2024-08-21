@@ -113,16 +113,12 @@ const ChatContainer: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
-  const [nextId, setNextId] = useState(1);
 
   useEffect(() => {
     const fetchAllMessages = async () => {
       try {
         const fetchedMessages: Message[] = await fetchMessages();
         setMessages(fetchedMessages);
-        if (fetchedMessages.length > 0) {
-          setNextId(Math.max(...fetchedMessages.map((msg) => msg.id)) + 1);
-        }
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -140,17 +136,15 @@ const ChatContainer: React.FC = () => {
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) return;
 
-    const userMessage: Message = { id: nextId, content, sender: 'user' };
+    const userMessage: Message = { id: Date.now(), content, sender: 'user' };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setNextId(nextId + 1);
     setInput('');
     setLoading(true);
 
     try {
-      const { response } = await sendMessage(content);
-      const botMessage: Message = { id: nextId, content: response, sender: 'bot' };
+      const response = await sendMessage(content);
+      const botMessage: Message = { id: Date.now(), content: response.response, sender: 'bot' };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
-      setNextId(nextId + 1);
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
@@ -162,13 +156,13 @@ const ChatContainer: React.FC = () => {
     try {
       await resetMessages();
       setMessages([]);
-      setNextId(1);
     } catch (error) {
       console.error('Error resetting chat:', error);
     }
   };
 
   const isSendDisabled = !input.trim();
+  const isResetDisabled = messages.length === 0;
 
   return (
     <Container>
@@ -193,7 +187,7 @@ const ChatContainer: React.FC = () => {
         <div ref={endRef} />
         <ResetButton 
           onClick={handleResetChat} 
-          disabled={messages.length === 0} 
+          disabled={isResetDisabled} 
           title="Reset chat"
         >
           <FontAwesomeIcon icon={faUndo} />
